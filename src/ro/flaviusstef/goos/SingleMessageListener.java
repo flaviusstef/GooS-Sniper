@@ -18,7 +18,7 @@ public class SingleMessageListener implements MessageListener {
 	}
 	
 	public void receivesAMessage() throws InterruptedException {
-		assertThat("Message", messages.poll(5, SECONDS), is(notNullValue()));
+		assertThat("Message", messages.poll(3, SECONDS), is(notNullValue()));
 	}
 
 }

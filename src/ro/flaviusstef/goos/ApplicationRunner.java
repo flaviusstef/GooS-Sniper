@@ -3,8 +3,8 @@ package ro.flaviusstef.goos;
 public class ApplicationRunner {
 
 	protected static final String SNIPER_ID = "sniper";
-	protected static final String SNIPER_PASSWORD = "password";
-	protected static final String XMPP_HOSTNAME = "localhost";
+	protected static final String SNIPER_PASSWORD = "sniper";
+	protected static final String XMPP_HOSTNAME = "shary.dev.syneto.net";
 	private static final String STATUS_JOINING = "joining";
 	private static final String STATUS_LOST = "lost";
 	private AuctionSniperDriver driver;
