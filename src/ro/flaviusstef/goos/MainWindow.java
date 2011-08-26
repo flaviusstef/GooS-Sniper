@@ -9,6 +9,7 @@ import javax.swing.border.LineBorder;
 public class MainWindow extends JFrame {
 	public static final String SNIPER_STATUS_NAME = "sniper status";
 	private static final String STATUS_JOINING = "joining";
+	public static final String STATUS_LOST    = "lost";
 	public static final String MAIN_WINDOW_NAME = "Auction Sniper";
 	private final JLabel sniperStatus = createLabel(STATUS_JOINING);
 	
@@ -26,5 +27,10 @@ public class MainWindow extends JFrame {
 		result.setName(SNIPER_STATUS_NAME);
 		result.setBorder(new LineBorder(Color.BLACK));
 		return result;
+	}
+
+	public void showStatus(String status) {
+		sniperStatus.setText(status);
+		
 	}
 }
