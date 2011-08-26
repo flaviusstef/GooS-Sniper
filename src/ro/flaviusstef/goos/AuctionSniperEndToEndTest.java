@@ -1,5 +1,8 @@
 package ro.flaviusstef.goos;
 
+import org.junit.After;
+import org.junit.Test;
+
 public class AuctionSniperEndToEndTest {
 
 	private final FakeAuctionServer auction = new FakeAuctionServer("item-54321");
