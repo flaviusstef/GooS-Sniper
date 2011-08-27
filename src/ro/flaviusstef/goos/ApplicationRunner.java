@@ -4,7 +4,7 @@ public class ApplicationRunner {
 
 	protected static final String SNIPER_ID = "sniper";
 	protected static final String SNIPER_PASSWORD = "sniper";
-	protected static final String XMPP_HOSTNAME = "shary.dev.syneto.net";
+	protected static final String XMPP_HOSTNAME = "vaio";
 	private static final String STATUS_JOINING = "joining";
 	private static final String STATUS_LOST = "lost";
 	private AuctionSniperDriver driver;
