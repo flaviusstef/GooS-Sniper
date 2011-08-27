@@ -7,6 +7,8 @@ public class ApplicationRunner {
 	protected static final String XMPP_HOSTNAME = "vaio";
 	private static final String STATUS_JOINING = "joining";
 	private static final String STATUS_LOST = "lost";
+	public static final String SNIPER_XMPP_ID = "sniper@vaio/Auction";
+	private static final String STATUS_BIDDING = "bidding";
 	private AuctionSniperDriver driver;
 
 	public void startBiddingIn(final FakeAuctionServer auction) {
@@ -25,14 +27,18 @@ public class ApplicationRunner {
 		driver = new AuctionSniperDriver(1000);
 		driver.showsSniperStatus(STATUS_JOINING);
 	}
-	
+		
+	public void stop() {
+		if (driver != null)
+			driver.dispose();
+	}
+
 	public void showsSniperHasLostAuction() {
 		driver.showsSniperStatus(STATUS_LOST);
 	}
 	
-	public void stop() {
-		if (driver != null)
-			driver.dispose();
+	public void hasShownSniperIsBidding() {
+		driver.showsSniperStatus(STATUS_BIDDING);
 	}
 
 }
