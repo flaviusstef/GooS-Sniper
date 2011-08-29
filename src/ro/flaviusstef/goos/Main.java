@@ -9,7 +9,7 @@ import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
-public class Main implements SniperListener {
+public class Main {
 
 	private static final int ARG_HOSTNAME = 0;
 	private static final int ARG_USERNAME = 1;
@@ -19,9 +19,6 @@ public class Main implements SniperListener {
 	private static final String AUCTION_RESOURCE = "Auction";
 	private static final String ITEM_ID_AS_LOGIN = "auction-%s";
 	private static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + AUCTION_RESOURCE;
-	
-	public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: BID; Price: %d";
-	public static final String JOIN_COMMAND_FORMAT = "SOLVersion: 1.1; Command: JOIN;";
 	
 	private static MainWindow ui;
 	private static XMPPConnection connection;
@@ -50,12 +47,15 @@ public class Main implements SniperListener {
 	private void joinAuction(XMPPConnection connection, String itemId)
 			throws XMPPException {
 		disconnectWhenUICloses();
-		Chat chat = connection.getChatManager().createChat(
-		  auctionId(itemId, connection), 
-		  new AuctionMessageTranslator(new AuctionSniper(this)));
+		final Chat chat = connection.getChatManager().
+		                    createChat(auctionId(itemId, connection), null);
 		
 		this.notToBeGCd = chat;
-		chat.sendMessage(JOIN_COMMAND_FORMAT);
+		
+		Auction auction = new XMPPAuction(chat);
+		chat.addMessageListener(new AuctionMessageTranslator(
+				new AuctionSniper(auction, new SniperStateDisplayer(ui))));
+		auction.join();
 	}
 
 	private void disconnectWhenUICloses() {
@@ -77,13 +77,5 @@ public class Main implements SniperListener {
 
 	private static String auctionId(String itemId, XMPPConnection connection) {
 		return String.format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
-	}
-
-	public void sniperLost() {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				ui.showStatus(MainWindow.STATUS_LOST);
-			}
-		});
 	}
 }

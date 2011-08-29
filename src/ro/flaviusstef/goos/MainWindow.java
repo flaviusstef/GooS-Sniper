@@ -8,10 +8,9 @@ import javax.swing.border.LineBorder;
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
 	public static final String SNIPER_STATUS_NAME = "sniper status";
-	private static final String STATUS_JOINING = "joining";
-	public static final String STATUS_LOST    = "lost";
 	public static final String MAIN_WINDOW_NAME = "Auction Sniper";
-	private final JLabel sniperStatus = createLabel(STATUS_JOINING);
+	public static final String STATUS_WINNING = "won";
+	private final JLabel sniperStatus = createLabel(SniperStateDisplayer.STATUS_JOINING);
 	
 	public MainWindow() {
 		super("Auction Sniper");
