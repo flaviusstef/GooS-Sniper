@@ -4,7 +4,6 @@ import org.junit.After;
 import org.junit.Test;
 
 import ro.flaviusstef.goos.ApplicationRunner;
-import ro.flaviusstef.goos.FakeAuctionServer;
 
 
 public class AuctionSniperEndToEndTest {
@@ -47,14 +46,14 @@ public class AuctionSniperEndToEndTest {
 		auction.hasReceivedJoinRequestFrom(ApplicationRunner.SNIPER_XMPP_ID);
 		
 		auction.reportPrice(1000, 98, "other bidder");
-		application.hasShownSniperIsBidding();
+		application.hasShownSniperIsBidding(1000, 98);
 		
 		auction.hasReceivedBid(1098, ApplicationRunner.SNIPER_XMPP_ID);
 		auction.reportPrice(1098, 97, ApplicationRunner.SNIPER_XMPP_ID);
-		application.hasShownSniperIsWinning();
+		application.hasShownSniperIsWinning(1098);
 		
 		auction.announceClosed();
-		application.showsSniperHasWon();
+		application.showsSniperHasWon(1098);
 	}
 
 	@After

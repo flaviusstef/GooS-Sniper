@@ -3,8 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="vendor/hamcrest-core-1.1.jar"/>
-	<classpathentry kind="lib" path="vendor/hamcrest-library-1.1.jar"/>
 	<classpathentry kind="lib" path="vendor/jmock-2.5.1.jar"/>
 	<classpathentry kind="lib" path="vendor/jmock-junit4-2.5.1.jar"/>
 	<classpathentry kind="lib" path="vendor/smack.jar"/>
@@ -15,5 +13,6 @@
 	<classpathentry kind="lib" path="vendor/windowlicker-swing-DEV-src.jar"/>
 	<classpathentry kind="lib" path="vendor/windowlicker-swing-DEV.jar"/>
 	<classpathentry kind="lib" path="vendor/junit-4.8.1.jar"/>
+	<classpathentry kind="lib" path="vendor/hamcrest-1.3.0RC2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

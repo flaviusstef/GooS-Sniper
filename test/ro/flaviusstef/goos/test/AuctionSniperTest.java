@@ -11,15 +11,17 @@ import ro.flaviusstef.goos.Auction;
 import ro.flaviusstef.goos.AuctionEventListener.PriceSource;
 import ro.flaviusstef.goos.AuctionSniper;
 import ro.flaviusstef.goos.SniperListener;
+import ro.flaviusstef.goos.SniperState;
 
 @RunWith(JMock.class)
 public class AuctionSniperTest {
+	private static final String ITEM_ID = "item id";
 	private final Mockery context = new Mockery();
 	private final SniperListener sniperListener = 
 		context.mock(SniperListener.class);
 	private final States sniperState = context.states("sniper");
 	private final Auction auction = context.mock(Auction.class);
-	private final AuctionSniper sniper = new AuctionSniper(auction, sniperListener);
+	private final AuctionSniper sniper = new AuctionSniper(ITEM_ID, auction, sniperListener);
 	
 	@Test
 	public void reportsWhenAuctionClosesImmediately() {
@@ -34,10 +36,11 @@ public class AuctionSniperTest {
 	public void bidsHigherAndReportsBiddingWhenNewPriceArrives() {
 		final int price = 100;
 		final int increment = 10;
+		final int bid = price+increment;
 
 		context.checking(new Expectations() {{
-			one(auction).bid(price+increment);
-			atLeast(1).of(sniperListener).sniperBidding();
+			one(auction).bid(bid);
+			atLeast(1).of(sniperListener).sniperBidding(new SniperState(ITEM_ID, price, bid));
 		}});
 		
 		sniper.currentPrice(price, increment, PriceSource.FromOtherBidder);
@@ -56,7 +59,7 @@ public class AuctionSniperTest {
 	public void reportsLostIfAuctionClosesWhenBidding() {
 		context.checking(new Expectations(){{
 			ignoring(auction);
-			allowing(sniperListener).sniperBidding();
+			allowing(sniperListener).sniperBidding(with(any(SniperState.class)));
 			then(sniperState.is("bidding"));
 			
 			atLeast(1).of(sniperListener).sniperLost();

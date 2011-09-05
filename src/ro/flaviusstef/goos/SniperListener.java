@@ -5,4 +5,5 @@ public interface SniperListener {
 	public void sniperBidding();
 	void sniperWinning();
 	public void sniperWon();
+	public void sniperBidding(SniperState sniperState);
 }

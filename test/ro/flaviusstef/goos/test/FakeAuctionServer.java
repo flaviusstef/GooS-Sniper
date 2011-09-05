@@ -1,4 +1,4 @@
-package ro.flaviusstef.goos;
+package ro.flaviusstef.goos.test;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.is;
@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 import org.hamcrest.Matcher;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.Message;
+
+import ro.flaviusstef.goos.XMPPAuction;
 
 import static org.junit.Assert.*;
 

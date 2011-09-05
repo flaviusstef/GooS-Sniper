@@ -28,4 +28,9 @@ public class SniperStateDisplayer implements SniperListener {
 			}
 		});
 	}
+
+	@Override
+	public void sniperBidding(SniperState state) {
+		ui.sniperStatusChanged(state, STATUS_BIDDING);
+	}
 }
