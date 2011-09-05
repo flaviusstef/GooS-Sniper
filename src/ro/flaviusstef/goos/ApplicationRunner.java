@@ -2,13 +2,15 @@ package ro.flaviusstef.goos;
 
 public class ApplicationRunner {
 
-	protected static final String SNIPER_ID = "sniper";
+	public static final String SNIPER_ID = "sniper";
 	protected static final String SNIPER_PASSWORD = "sniper";
-	protected static final String XMPP_HOSTNAME = "vaio";
+	protected static final String XMPP_HOSTNAME = "localhost";
 	private static final String STATUS_JOINING = "joining";
 	private static final String STATUS_LOST = "lost";
-	public static final String SNIPER_XMPP_ID = "sniper@vaio/Auction";
 	private static final String STATUS_BIDDING = "bidding";
+	private static final String STATUS_WINNING = "winning";
+	private static final String STATUS_WON = "won";
+	public static final String SNIPER_XMPP_ID = "sniper@shary.dev.syneto.net/Auction";
 	private AuctionSniperDriver driver;
 
 	public void startBiddingIn(final FakeAuctionServer auction) {
@@ -33,12 +35,20 @@ public class ApplicationRunner {
 			driver.dispose();
 	}
 
-	public void showsSniperHasLostAuction() {
+	public void showsSniperHasLost() {
 		driver.showsSniperStatus(STATUS_LOST);
+	}
+	
+	public void showsSniperHasWon() {
+		driver.showsSniperStatus(STATUS_WON);
 	}
 	
 	public void hasShownSniperIsBidding() {
 		driver.showsSniperStatus(STATUS_BIDDING);
+	}
+
+	public void hasShownSniperIsWinning() {
+		driver.showsSniperStatus(STATUS_WINNING);
 	}
 
 }

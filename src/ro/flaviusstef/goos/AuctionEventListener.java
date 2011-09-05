@@ -1,7 +1,9 @@
 package ro.flaviusstef.goos;
 
 public interface AuctionEventListener {
-
+	enum PriceSource {
+		FromSniper, FromOtherBidder;
+	}
 	public void auctionClosed();
-	public void currentPrice(int price, int increment);
+	public void currentPrice(int price, int increment, PriceSource source);
 }

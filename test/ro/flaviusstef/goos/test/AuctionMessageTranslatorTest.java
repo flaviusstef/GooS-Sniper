@@ -8,7 +8,9 @@ import org.jmock.integration.junit4.JMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ro.flaviusstef.goos.ApplicationRunner;
 import ro.flaviusstef.goos.AuctionEventListener;
+import ro.flaviusstef.goos.AuctionEventListener.PriceSource;
 import ro.flaviusstef.goos.AuctionMessageTranslator;
 
 @RunWith(JMock.class)
@@ -17,7 +19,7 @@ public class AuctionMessageTranslatorTest {
 	private final AuctionEventListener listener = context.mock(AuctionEventListener.class);
 	public static final Chat UNUSED_CHAT = null;
 	private final AuctionMessageTranslator translator = 
-		new AuctionMessageTranslator(listener);
+		new AuctionMessageTranslator(ApplicationRunner.SNIPER_ID, listener);
 
 	@Test
 	public void notifiesAuctionClosedWhenCloseMessageReceived() {
@@ -31,9 +33,21 @@ public class AuctionMessageTranslatorTest {
 	}
 	
 	@Test
-	public void notifiesBidDetailsWhenCurrentPriceMessageReceived() {
+	public void notifiesBidDetailsWhenCurrentPriceMessageReceivedFromSniper() {
 		context.checking(new Expectations(){{
-			exactly(1).of(listener).currentPrice(192, 7);
+			exactly(1).of(listener).currentPrice(192, 7, PriceSource.FromSniper);
+		}});
+
+		Message message = new Message();
+		message.setBody("SOLVersion: 1.1; Event: PRICE; CurrentPrice: 192; Increment: 7; Bidder: " + ApplicationRunner.SNIPER_ID + ";");
+		
+		translator.processMessage(UNUSED_CHAT , message);
+	}
+	
+	@Test
+	public void notifiesBidDetailsWhenCurrentPriceMessageReceivedFromOtherBidder() {
+		context.checking(new Expectations(){{
+			exactly(1).of(listener).currentPrice(192, 7, PriceSource.FromOtherBidder);
 		}});
 
 		Message message = new Message();
