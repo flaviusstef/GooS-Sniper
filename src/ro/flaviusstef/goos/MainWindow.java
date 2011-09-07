@@ -1,11 +1,11 @@
 package ro.flaviusstef.goos;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 
-import javax.swing.*;
-import javax.swing.border.LineBorder;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -40,7 +40,7 @@ public class MainWindow extends JFrame {
 		snipers.setStatusText(status);
 	}
 
-	public void sniperStatusChanged(SniperState state, String status) {
-		snipers.sniperStatusChanged(state, status);
+	public void sniperStateChanged(SniperSnapshot newSnapshot) {
+		snipers.sniperStatusChanged(newSnapshot);
 	}
 }

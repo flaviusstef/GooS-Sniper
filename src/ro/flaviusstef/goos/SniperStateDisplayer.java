@@ -17,8 +17,6 @@ public class SniperStateDisplayer implements SniperListener {
 	}
 
 	public void sniperLost()    { showStatus(STATUS_LOST); }
-	public void sniperBidding() { showStatus(STATUS_BIDDING); }
-	public void sniperWinning() { showStatus(STATUS_WINNING); }
 	public void sniperWon() { showStatus(STATUS_WON); }
 	
 	private void showStatus(final String status) {
@@ -30,7 +28,7 @@ public class SniperStateDisplayer implements SniperListener {
 	}
 
 	@Override
-	public void sniperBidding(SniperState state) {
-		ui.sniperStatusChanged(state, STATUS_BIDDING);
+	public void sniperStateChanged(SniperSnapshot newSnapshot) {
+		ui.sniperStateChanged(newSnapshot);
 	}
 }

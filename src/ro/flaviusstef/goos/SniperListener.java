@@ -2,8 +2,6 @@ package ro.flaviusstef.goos;
 
 public interface SniperListener {
 	public void sniperLost();
-	public void sniperBidding();
-	void sniperWinning();
 	public void sniperWon();
-	public void sniperBidding(SniperState sniperState);
+	public void sniperStateChanged(SniperSnapshot newSnapshot);
 }

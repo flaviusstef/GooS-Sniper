@@ -12,6 +12,7 @@ import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import ro.flaviusstef.goos.SniperSnapshot;
 import ro.flaviusstef.goos.SniperState;
 import ro.flaviusstef.goos.SniperStateDisplayer;
 import ro.flaviusstef.goos.SnipersTableModel;
@@ -40,12 +41,12 @@ public class SnipersTableModelTest {
 			one(listener).tableChanged(with(aRowChangedEvent()));
 		}});
 		
-		model.sniperStatusChanged(new SniperState("item id", 555, 666), SniperStateDisplayer.STATUS_BIDDING);
+		model.sniperStatusChanged(new SniperSnapshot("item id", 555, 666, SniperState.BIDDING));
 		
 		assertColumnEquals(Column.ITEM_IDENTIFIER, "item id");
 		assertColumnEquals(Column.LAST_PRICE, 555);
 		assertColumnEquals(Column.LAST_BID, 666);
-		assertColumnEquals(Column.SNIPER_STATUS, SniperStateDisplayer.STATUS_BIDDING);
+		assertColumnEquals(Column.SNIPER_STATE, SniperStateDisplayer.STATUS_BIDDING);
 	}
 
 	private void assertColumnEquals(Column column, Object expected) {
