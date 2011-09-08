@@ -20,20 +20,15 @@ public class Main {
 	private static final String ITEM_ID_AS_LOGIN = "auction-%s";
 	private static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + AUCTION_RESOURCE;
 	
+	private final SnipersTableModel snipers = new SnipersTableModel();
 	private static MainWindow ui;
 	private static XMPPConnection connection;
 	@SuppressWarnings("unused")
 	private Chat notToBeGCd;
 	
 	public Main() throws Exception {
-		startUserInterface();
-	}
-	
-	private void startUserInterface() throws Exception {
 		SwingUtilities.invokeAndWait(new Runnable() {
-			public void run() {
-				ui = new MainWindow();
-			}
+			public void run() { ui = new MainWindow(snipers); }
 		});
 	}
 
@@ -54,7 +49,7 @@ public class Main {
 		
 		Auction auction = new XMPPAuction(chat);
 		chat.addMessageListener(new AuctionMessageTranslator(connection.getUser(),
-				new AuctionSniper(itemId, auction, new SniperStateDisplayer(ui))));
+				new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers))));
 		auction.join();
 	}
 

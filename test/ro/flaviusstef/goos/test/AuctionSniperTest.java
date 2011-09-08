@@ -16,6 +16,7 @@ import ro.flaviusstef.goos.AuctionSniper;
 import ro.flaviusstef.goos.SniperListener;
 import ro.flaviusstef.goos.SniperSnapshot;
 import ro.flaviusstef.goos.SniperState;
+import static ro.flaviusstef.goos.SniperState.*;
 
 @RunWith(JMock.class)
 public class AuctionSniperTest {
@@ -30,7 +31,7 @@ public class AuctionSniperTest {
 	@Test
 	public void reportsWhenAuctionClosesImmediately() {
 		context.checking(new Expectations() {{
-			atLeast(1).of(sniperListener).sniperLost();
+			atLeast(1).of(sniperListener).sniperStateChanged(with(aSniperThatIs(LOST)));
 		}});
 		
 		sniper.auctionClosed();
@@ -54,11 +55,11 @@ public class AuctionSniperTest {
 	public void reportsIsWinningWhenCurrentPriceComesFromSniper() {
 		context.checking(new Expectations() {{
 			ignoring(auction);
-			allowing(sniperListener).sniperStateChanged(with(aSniperThatIs(SniperState.BIDDING)));
+			allowing(sniperListener).sniperStateChanged(with(aSniperThatIs(BIDDING)));
 			then(sniperState.is("bidding"));
 			
 			atLeast(1).of(sniperListener).sniperStateChanged(
-					new SniperSnapshot(ITEM_ID, 20, 20, SniperState.WINNING));
+					new SniperSnapshot(ITEM_ID, 20, 20, WINNING));
 			when(sniperState.is("bidding"));
 		}});
 		
@@ -70,10 +71,10 @@ public class AuctionSniperTest {
 	public void reportsLostIfAuctionClosesWhenBidding() {
 		context.checking(new Expectations(){{
 			ignoring(auction);
-			allowing(sniperListener).sniperStateChanged(with(aSniperThatIs(SniperState.BIDDING)));
+			allowing(sniperListener).sniperStateChanged(with(aSniperThatIs(BIDDING)));
 			then(sniperState.is("bidding"));
 			
-			atLeast(1).of(sniperListener).sniperLost();
+			atLeast(1).of(sniperListener).sniperStateChanged(with(aSniperThatHas(LOST)));
 			when(sniperState.is("bidding"));
 		}});
 		
@@ -85,10 +86,10 @@ public class AuctionSniperTest {
 	public void reportsWonIfAuctionClosesWhenWinning() {
 		context.checking(new Expectations(){{
 			ignoring(auction);
-			allowing(sniperListener).sniperStateChanged(with(aSniperThatIs(SniperState.WINNING)));
+			allowing(sniperListener).sniperStateChanged(with(aSniperThatIs(WINNING)));
 			then(sniperState.is("winning"));
 			
-			atLeast(1).of(sniperListener).sniperWon();
+			atLeast(1).of(sniperListener).sniperStateChanged(with(aSniperThatHas(WON)));
 			when(sniperState.is("winning"));
 		}});
 		
@@ -104,5 +105,10 @@ public class AuctionSniperTest {
 				return actual.state;
 			}
 		};
+	}
+	
+	// syntactic sugar
+	private Matcher<SniperSnapshot> aSniperThatHas(final SniperState state) {
+		return aSniperThatIs(state);
 	}
 }

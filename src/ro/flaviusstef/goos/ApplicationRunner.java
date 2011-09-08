@@ -43,18 +43,6 @@ public class ApplicationRunner {
 		driver.showsSniperStatus(STATUS_LOST);
 	}
 	
-	public void showsSniperHasWon() {
-		driver.showsSniperStatus(STATUS_WON);
-	}
-	
-	public void hasShownSniperIsBidding() {
-		driver.showsSniperStatus(STATUS_BIDDING);
-	}
-
-	public void hasShownSniperIsWinning() {
-		driver.showsSniperStatus(STATUS_WINNING);
-	}
-
 	public void hasShownSniperIsBidding(int lastPrice, int lastBid) {
 		driver.showsSniperStatus(itemId, lastPrice, lastBid, STATUS_BIDDING);
 	}
