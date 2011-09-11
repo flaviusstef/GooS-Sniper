@@ -8,7 +8,6 @@ import org.jmock.integration.junit4.JMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ro.flaviusstef.goos.ApplicationRunner;
 import ro.flaviusstef.goos.AuctionEventListener;
 import ro.flaviusstef.goos.AuctionEventListener.PriceSource;
 import ro.flaviusstef.goos.AuctionMessageTranslator;

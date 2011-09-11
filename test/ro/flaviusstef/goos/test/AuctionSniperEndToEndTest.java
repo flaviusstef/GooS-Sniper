@@ -3,7 +3,6 @@ package ro.flaviusstef.goos.test;
 import org.junit.After;
 import org.junit.Test;
 
-import ro.flaviusstef.goos.ApplicationRunner;
 
 
 public class AuctionSniperEndToEndTest {
