@@ -53,6 +53,13 @@ public class SnipersTableModelTest {
 		final int columnIndex = column.ordinal();
 		assertEquals(expected, model.getValueAt(rowIndex, columnIndex));
 	}
+	
+	@Test
+	public void setsUpColumnHeadings() {
+		for (Column column : Column.values()) {
+			assertEquals(column.name, model.getColumnName(column.ordinal()));
+		}
+	}
 
 	// TODO: what is this?
 	protected Matcher<TableModelEvent> aRowChangedEvent() {

@@ -1,6 +1,7 @@
 package ro.flaviusstef.goos;
 
 import ro.flaviusstef.goos.test.FakeAuctionServer;
+import static ro.flaviusstef.goos.SnipersTableModel.*;
 
 public class ApplicationRunner {
 
@@ -31,7 +32,11 @@ public class ApplicationRunner {
 		thread.setDaemon(true);
 		thread.start();
 		driver = new AuctionSniperDriver(1000);
-		driver.showsSniperStatus(STATUS_JOINING);
+		driver.hasTitle(MainWindow.APPLICATION_TITLE);
+		driver.hasColumnTitles();
+		final SniperSnapshot JOINING = new SniperSnapshot("", 0, 0, SniperState.JOINING);
+		driver.showsSniperStatus(JOINING.itemId, JOINING.lastPrice,
+				                 JOINING.lastBid, textFor(SniperState.JOINING));
 	}
 		
 	public void stop() {
@@ -39,8 +44,8 @@ public class ApplicationRunner {
 			driver.dispose();
 	}
 
-	public void showsSniperHasLost() {
-		driver.showsSniperStatus(STATUS_LOST);
+	public void showsSniperHasLost(int lastPrice, int lastBid) {
+		driver.showsSniperStatus(itemId, lastPrice, lastBid, STATUS_LOST);
 	}
 	
 	public void hasShownSniperIsBidding(int lastPrice, int lastBid) {
