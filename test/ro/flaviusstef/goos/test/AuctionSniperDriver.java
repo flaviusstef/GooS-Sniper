@@ -1,4 +1,4 @@
-package ro.flaviusstef.goos;
+package ro.flaviusstef.goos.test;
 
 import static com.objogate.wl.swing.matcher.IterableComponentsMatcher.matching;
 import static com.objogate.wl.swing.matcher.JLabelTextMatcher.withLabelText;
@@ -6,6 +6,8 @@ import static com.objogate.wl.swing.matcher.JLabelTextMatcher.withLabelText;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.table.JTableHeader;
+
+import ro.flaviusstef.goos.ui.MainWindow;
 
 import com.objogate.wl.swing.AWTEventQueueProber;
 import com.objogate.wl.swing.driver.*;

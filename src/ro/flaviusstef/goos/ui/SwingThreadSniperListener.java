@@ -1,6 +1,9 @@
-package ro.flaviusstef.goos;
+package ro.flaviusstef.goos.ui;
 
 import javax.swing.SwingUtilities;
+
+import ro.flaviusstef.goos.SniperListener;
+import ro.flaviusstef.goos.SniperSnapshot;
 
 public class SwingThreadSniperListener implements SniperListener {
 	private SnipersTableModel snipers;
@@ -11,7 +14,6 @@ public class SwingThreadSniperListener implements SniperListener {
 
 	@Override
 	public void sniperStateChanged(final SniperSnapshot newSnapshot) {
-		// TODO: what is this?
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {

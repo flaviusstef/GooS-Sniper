@@ -1,8 +1,12 @@
-package ro.flaviusstef.goos;
+package ro.flaviusstef.goos.ui;
 
 import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
+
+import ro.flaviusstef.goos.SniperListener;
+import ro.flaviusstef.goos.SniperSnapshot;
+import ro.flaviusstef.goos.SniperState;
 
 import com.objogate.exception.Defect;
 

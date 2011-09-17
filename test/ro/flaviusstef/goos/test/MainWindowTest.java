@@ -4,10 +4,9 @@ import org.junit.Test;
 
 import com.objogate.wl.swing.probe.ValueMatcherProbe;
 
-import ro.flaviusstef.goos.AuctionSniperDriver;
-import ro.flaviusstef.goos.MainWindow;
-import ro.flaviusstef.goos.SnipersTableModel;
 import ro.flaviusstef.goos.UserRequestListener;
+import ro.flaviusstef.goos.ui.MainWindow;
+import ro.flaviusstef.goos.ui.SnipersTableModel;
 import static org.hamcrest.CoreMatchers.*;
 
 

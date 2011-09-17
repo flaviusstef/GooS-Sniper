@@ -1,4 +1,6 @@
-package ro.flaviusstef.goos;
+package ro.flaviusstef.goos.ui;
+
+import ro.flaviusstef.goos.SniperSnapshot;
 
 public enum Column {
 	ITEM_IDENTIFIER("Item") {

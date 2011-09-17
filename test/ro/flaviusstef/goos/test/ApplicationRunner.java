@@ -1,10 +1,9 @@
 package ro.flaviusstef.goos.test;
 
-import static ro.flaviusstef.goos.SnipersTableModel.textFor;
-import ro.flaviusstef.goos.AuctionSniperDriver;
+import static ro.flaviusstef.goos.ui.SnipersTableModel.textFor;
 import ro.flaviusstef.goos.Main;
-import ro.flaviusstef.goos.MainWindow;
 import ro.flaviusstef.goos.SniperState;
+import ro.flaviusstef.goos.ui.MainWindow;
 
 public class ApplicationRunner {
 

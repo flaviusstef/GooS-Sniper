@@ -15,10 +15,10 @@ import com.objogate.exception.Defect;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import ro.flaviusstef.goos.Column;
 import ro.flaviusstef.goos.SniperSnapshot;
 import ro.flaviusstef.goos.SniperState;
-import ro.flaviusstef.goos.SnipersTableModel;
+import ro.flaviusstef.goos.ui.Column;
+import ro.flaviusstef.goos.ui.SnipersTableModel;
 
 @RunWith(JMock.class)
 public class SnipersTableModelTest {
