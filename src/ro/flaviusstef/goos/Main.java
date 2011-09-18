@@ -6,10 +6,6 @@ import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
-import org.jivesoftware.smack.Connection;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
-
 import ro.flaviusstef.goos.ui.MainWindow;
 import ro.flaviusstef.goos.ui.SnipersTableModel;
 import ro.flaviusstef.goos.ui.SwingThreadSniperListener;
@@ -24,7 +20,6 @@ public class Main {
 	private final SnipersTableModel snipers = new SnipersTableModel();
 	private static MainWindow ui;
 	private ArrayList<Auction>notToBeGCd = new ArrayList<Auction>();
-	static final String AUCTION_RESOURCE = "Auction";
 	
 	public Main() throws Exception {
 		SwingUtilities.invokeAndWait(new Runnable() {
@@ -35,17 +30,17 @@ public class Main {
 	public static void main(String... args) throws Exception{
 		Main main = new Main();
 		
-		XMPPConnection connection = connectTo(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
-		main.disconnectWhenUICloses(connection);
-		main.addUserRequestListenerFor(connection);
+		XMPPAuctionHouse auctionHouse = XMPPAuctionHouse.connectTo(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
+		main.disconnectWhenUICloses(auctionHouse);
+		main.addUserRequestListenerFor(auctionHouse);
 	}
 
-	private void addUserRequestListenerFor(final XMPPConnection connection){
+	private void addUserRequestListenerFor(final XMPPAuctionHouse house){
 		ui.addUserRequestListener(new UserRequestListener() {
 			@Override
 			public void joinAuction(String itemId) {
 				snipers.addSniper(SniperSnapshot.joining(itemId));
-				Auction auction = new XMPPAuction(connection, itemId);
+				Auction auction = house.auctionFor(itemId);
 				notToBeGCd.add(auction);
 				auction.addAuctionEventListener(
 				    new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers)));
@@ -54,20 +49,11 @@ public class Main {
 		});
 	}
 	
-	private void disconnectWhenUICloses(final Connection c) {
+	private void disconnectWhenUICloses(final XMPPAuctionHouse connection) {
 		ui.addWindowListener(new WindowAdapter() {
 			public void windowClosed(WindowEvent e) {
-				c.disconnect();
+				connection.disconnect();
 			}
 		});
-	}
-
-	private static XMPPConnection 
-	connectTo(String hostname, String username, String password) throws XMPPException {
-		XMPPConnection connection = new XMPPConnection(hostname);
-		connection.connect();
-		connection.login(username, password, AUCTION_RESOURCE);
-		
-		return connection;
 	}
 }

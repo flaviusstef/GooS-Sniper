@@ -9,8 +9,9 @@ public class XMPPAuction implements Auction {
 	public static final String JOIN_COMMAND_FORMAT = "SOLVersion: 1.1; Command: JOIN;";
 	public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: BID; Price: %d";
 	
+	static final String AUCTION_RESOURCE = "Auction";
 	private static final String ITEM_ID_AS_LOGIN = "auction-%s";
-	private static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + Main.AUCTION_RESOURCE;
+	private static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + XMPPAuction.AUCTION_RESOURCE;
 	
 	private final Announcer<AuctionEventListener> auctionEventListeners =
 					Announcer.to(AuctionEventListener.class);
@@ -22,10 +23,6 @@ public class XMPPAuction implements Auction {
 	
 	public static String auctionId(String itemId, XMPPConnection connection) {
 		return String.format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
-	}
-	
-	public XMPPAuction(Chat chat){
-		this.chat = chat;
 	}
 	
 	public void bid(int amount) {
