@@ -4,7 +4,7 @@ public class SniperSnapshot {
 	public final String itemId;
 	public final int lastPrice;
 	public final int lastBid;
-	public SniperState state;
+	public final SniperState state;
 	
 	public SniperSnapshot(String itemId, int lastPrice, int lastBid, SniperState state){
 		this.itemId = itemId;
@@ -19,11 +19,12 @@ public class SniperSnapshot {
 		
 		return itemId.equals(((SniperSnapshot) other).itemId) && 
 		       lastPrice == ((SniperSnapshot) other).lastPrice &&
-		       lastBid == ((SniperSnapshot) other).lastBid;
+		       lastBid == ((SniperSnapshot) other).lastBid &&
+		       state.equals(((SniperSnapshot) other).state);
 	}
 	
 	public String toString() {
-		return String.format("Item: %s, last price: %d, last bid: %d", itemId, lastPrice, lastBid);
+		return String.format("Item: %s, last price: %d, last bid: %d, state: %s", itemId, lastPrice, lastBid, state);
 	}
 	
 	public SniperSnapshot bidding(int newLastPrice, int newLastBid) {
@@ -44,5 +45,9 @@ public class SniperSnapshot {
 
 	public boolean isForSameItemAs(SniperSnapshot other) {
 		return itemId.equals(other.itemId);	
+	}
+
+	public SniperSnapshot losing(int price) {
+		return new SniperSnapshot(itemId, price, lastBid, SniperState.LOSING);
 	}
 }

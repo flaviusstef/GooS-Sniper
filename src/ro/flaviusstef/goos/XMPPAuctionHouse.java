@@ -17,8 +17,8 @@ public class XMPPAuctionHouse implements AuctionHouse {
 	}
 
 	@Override
-	public Auction auctionFor(String itemId) {
-		return new XMPPAuction(connection, itemId);
+	public Auction auctionFor(Item item) {
+		return new XMPPAuction(connection, item.identifier);
 	}
 	
 	public void disconnect() {

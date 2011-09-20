@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import ro.flaviusstef.goos.Auction;
 import ro.flaviusstef.goos.AuctionEventListener;
+import ro.flaviusstef.goos.Item;
 import ro.flaviusstef.goos.XMPPAuctionHouse;
 import ro.flaviusstef.goos.test.ApplicationRunner;
 import ro.flaviusstef.goos.test.FakeAuctionServer;
@@ -38,7 +39,8 @@ public class XMPPAuctionHouseTest {
 		// TODO: What is this?
 		CountDownLatch auctionWasClosed = new CountDownLatch(1);
 		
-		Auction auction = auctionHouse.auctionFor(auctionServer.getItemId());
+		Item item = new Item(auctionServer.getItemId(), 678);
+		Auction auction = auctionHouse.auctionFor(item);
 		auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed));
 		
 		auction.join();
@@ -58,6 +60,10 @@ public class XMPPAuctionHouseTest {
 			@Override
 			public void auctionClosed() {
 				auctionWasClosed.countDown();
+			}
+
+			@Override
+			public void auctionFailed() {
 			}
 		};
 	}

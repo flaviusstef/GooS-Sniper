@@ -1,15 +1,23 @@
 package ro.flaviusstef.goos;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AuctionSniper implements AuctionEventListener {
 
-	private SniperListener sniperListener;
 	private Auction auction;
 	private SniperSnapshot snapshot;
+	private List<SniperListener> sniperListeners = new ArrayList<SniperListener>();
+	private Item item;
 
-	public AuctionSniper(String itemId, Auction auction, SniperListener sniperListener) {
+	public AuctionSniper(Item item, Auction auction) {
 		this.auction = auction;
-		this.sniperListener = sniperListener;
-		this.snapshot = SniperSnapshot.joining(itemId);
+		this.item = item;
+		this.snapshot = SniperSnapshot.joining(item.identifier);
+	}
+
+	public void addSniperListener(SniperListener sniperListener) {
+		sniperListeners.add(sniperListener);
 	}
 	
 	public void auctionClosed() {
@@ -22,13 +30,27 @@ public class AuctionSniper implements AuctionEventListener {
 			snapshot = snapshot.winning(price);
 		} else {
 			int bid = price + increment;
-			auction.bid(bid);
-			snapshot = snapshot.bidding(price, bid);
+			if (item.allowsBid(bid)) {
+				auction.bid(bid);
+				snapshot = snapshot.bidding(price, bid);
+			} else {
+				snapshot = snapshot.losing(price);
+			}
 		}
 		notifyChange();
 	}
 	
+	public SniperSnapshot getSnapshot() {
+		return snapshot;
+	}
+	
 	private void notifyChange() {
-		sniperListener.sniperStateChanged(snapshot);
+		for (SniperListener listener : sniperListeners) {
+			listener.sniperStateChanged(snapshot);
+		}
+	}
+
+	@Override
+	public void auctionFailed() {
 	}
 }

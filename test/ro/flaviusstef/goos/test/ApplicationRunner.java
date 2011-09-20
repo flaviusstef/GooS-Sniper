@@ -11,21 +11,14 @@ public class ApplicationRunner {
 	protected static final String SNIPER_PASSWORD = "sniper";
 	protected static final String XMPP_HOSTNAME = "localhost";
 	protected static final String STATUS_JOINING = "joining";
-	private static final String STATUS_LOST = "lost";
 	private static final String STATUS_WINNING = "winning";
+	private static final String STATUS_LOSING = "losing";
 	private static final String STATUS_WON = "won";
+	private static final String STATUS_LOST = "lost";
+	private static final String STATUS_FAILED = "failed";
 	public static final String SNIPER_XMPP_ID = "sniper@vaio/Auction";
 	private AuctionSniperDriver driver;
 
-	public void startBiddingIn(final FakeAuctionServer... auctions) {
-		startSniper(auctions);
-		for (FakeAuctionServer auction : auctions) {
-			final String itemId = auction.getItemId();
-			driver.startBiddingFor(itemId);
-			driver.showsSniperStatus(itemId, 0, 0, textFor(SniperState.JOINING));
-		}
-	}
-	
 	private void startSniper(final FakeAuctionServer... auctions) {
 		Thread thread = new Thread("Test Application") {
 			@Override
@@ -59,7 +52,7 @@ public class ApplicationRunner {
 		if (driver != null)
 			driver.dispose();
 	}
-
+	
 	public void showsSniperHasLost(FakeAuctionServer auction, int lastPrice, int lastBid) {
 		driver.showsSniperStatus(auction.getItemId(), lastPrice, lastBid, STATUS_LOST);
 	}
@@ -76,4 +69,27 @@ public class ApplicationRunner {
 		driver.showsSniperStatus(auction.getItemId(), lastPrice, lastPrice, STATUS_WON);
 	}
 
+	public void showsSniperHasFailed(FakeAuctionServer auction) {
+		driver.showsSniperStatus(auction.getItemId(), 0, 0, STATUS_FAILED);
+	}
+	
+	public void hasShownSniperIsLosing(FakeAuctionServer auction, int lastPrice, int lastBid) {
+		driver.showsSniperStatus(auction.getItemId(), lastPrice, lastBid, STATUS_LOSING);
+	}
+	
+	public void startBiddingIn(final FakeAuctionServer... auctions) {
+		startSniper(auctions);
+		for (FakeAuctionServer auction : auctions) {
+			final String itemId = auction.getItemId();
+			driver.startBiddingFor(itemId, Integer.MAX_VALUE);
+			driver.showsSniperStatus(itemId, 0, 0, textFor(SniperState.JOINING));
+		}
+	}
+	public void startBiddingWithStopPrice(int stopPrice, FakeAuctionServer auction) {
+		startSniper(auction);
+		System.out.println(driver);
+		driver.startBiddingFor(auction.getItemId(), stopPrice);
+	}
+	public void reportsInvalidMessage(FakeAuctionServer auction, String message) {
+	}
 }

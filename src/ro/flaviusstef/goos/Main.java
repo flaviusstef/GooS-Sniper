@@ -2,13 +2,10 @@ package ro.flaviusstef.goos;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
 import ro.flaviusstef.goos.ui.MainWindow;
-import ro.flaviusstef.goos.ui.SnipersTableModel;
-import ro.flaviusstef.goos.ui.SwingThreadSniperListener;
 
 public class Main {
 
@@ -16,14 +13,12 @@ public class Main {
 	private static final int ARG_USERNAME = 1;
 	private static final int ARG_PASSWORD = 2;
 	
-	
-	private final SnipersTableModel snipers = new SnipersTableModel();
 	private static MainWindow ui;
-	private ArrayList<Auction>notToBeGCd = new ArrayList<Auction>();
+	private final SniperPortfolio portfolio = new SniperPortfolio();
 	
 	public Main() throws Exception {
 		SwingUtilities.invokeAndWait(new Runnable() {
-			public void run() { ui = new MainWindow(snipers); }
+			public void run() { ui = new MainWindow(portfolio); }
 		});
 	}
 
@@ -35,24 +30,14 @@ public class Main {
 		main.addUserRequestListenerFor(auctionHouse);
 	}
 
-	private void addUserRequestListenerFor(final XMPPAuctionHouse house){
-		ui.addUserRequestListener(new UserRequestListener() {
-			@Override
-			public void joinAuction(String itemId) {
-				snipers.addSniper(SniperSnapshot.joining(itemId));
-				Auction auction = house.auctionFor(itemId);
-				notToBeGCd.add(auction);
-				auction.addAuctionEventListener(
-				    new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers)));
-				auction.join();
-			}
-		});
+	private void addUserRequestListenerFor(final XMPPAuctionHouse auctionHouse){
+		ui.addUserRequestListener(new SniperLauncher(auctionHouse, portfolio));
 	}
 	
-	private void disconnectWhenUICloses(final XMPPAuctionHouse connection) {
+	private void disconnectWhenUICloses(final XMPPAuctionHouse auctionHouse) {
 		ui.addWindowListener(new WindowAdapter() {
 			public void windowClosed(WindowEvent e) {
-				connection.disconnect();
+				auctionHouse.disconnect();
 			}
 		});
 	}

@@ -4,30 +4,32 @@ import org.junit.Test;
 
 import com.objogate.wl.swing.probe.ValueMatcherProbe;
 
+import ro.flaviusstef.goos.Item;
+import ro.flaviusstef.goos.SniperPortfolio;
 import ro.flaviusstef.goos.UserRequestListener;
 import ro.flaviusstef.goos.ui.MainWindow;
-import ro.flaviusstef.goos.ui.SnipersTableModel;
 import static org.hamcrest.CoreMatchers.*;
 
 
 public class MainWindowTest {
-	private final SnipersTableModel tableModel = new SnipersTableModel();
-	private final MainWindow mainWindow = new MainWindow(tableModel);
+	private final SniperPortfolio portfolio = new SniperPortfolio();
+	private final MainWindow mainWindow = new MainWindow(portfolio);
 	private final AuctionSniperDriver driver = new AuctionSniperDriver(100);
 	
 	@Test
 	public void makesUserRequestWhenJoinButtonClicked() {
-		final ValueMatcherProbe<String> buttonProbe = 
-			new ValueMatcherProbe<String>(equalTo("un item-id"), "join request");
+		// TODO: no, asta ce Dumnezo mai ii?
+		final ValueMatcherProbe<Item> itemProbe = 
+			new ValueMatcherProbe<Item>(equalTo(new Item("un item-id", 789)), "item request");
 		
 		mainWindow.addUserRequestListener(new UserRequestListener() {
-			public void joinAuction(String itemId) {
-				buttonProbe.setReceivedValue(itemId);
+			public void joinAuction(Item item) {
+				itemProbe.setReceivedValue(item);
 			}
 		});
 		
-		driver.startBiddingFor("un item-id");
-		driver.check(buttonProbe);
+		driver.startBiddingFor("un item-id", 789);
+		driver.check(itemProbe);
 	}
 	
 }

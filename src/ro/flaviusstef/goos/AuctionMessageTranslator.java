@@ -21,7 +21,15 @@ public class AuctionMessageTranslator implements MessageListener {
 
 	@Override
 	public void processMessage(Chat chat, Message message) {
-		AuctionEvent event = AuctionEvent.from(message.getBody());
+		try {
+			translate(message.getBody());
+		} catch (Exception e) {
+			listener.auctionFailed();
+		}
+	}
+
+	private void translate(String messageBody) throws MissingValueException {
+		AuctionEvent event = AuctionEvent.from(messageBody);
 		
 		String eventType = event.type();
 		if ("CLOSE".equals(eventType)) {
@@ -31,21 +39,30 @@ public class AuctionMessageTranslator implements MessageListener {
 		}
 	}
 
+	@SuppressWarnings("serial")
+	private static class MissingValueException extends Exception {
+	}
+	
 	private static class AuctionEvent {
 		private final Map<String, String> fields = new HashMap<String, String>();
-		public String type() { return get("Event"); }
-		public int currentPrice() { return getInt("CurrentPrice"); }
-		public int increment() { return getInt("Increment"); }
-		private String bidder() { return get("Bidder"); }
-		public PriceSource isFrom(String sniperId) {
+		public String type() throws MissingValueException { return get("Event"); }
+		public int currentPrice() throws NumberFormatException, MissingValueException { return getInt("CurrentPrice"); }
+		public int increment() throws NumberFormatException, MissingValueException { return getInt("Increment"); }
+		private String bidder() throws MissingValueException { return get("Bidder"); }
+		public PriceSource isFrom(String sniperId) throws MissingValueException {
 			return (bidder().equals(sniperId)) ? PriceSource.FromSniper : PriceSource.FromOtherBidder;
 		}
 		
-		private int getInt(String fieldName) {
+		private int getInt(String fieldName) throws NumberFormatException, MissingValueException {
 			return Integer.parseInt(get(fieldName));
 		}
-		private String get(String fieldName) {
-			return fields.get(fieldName);
+		
+		private String get(String fieldName) throws MissingValueException {
+			String value = fields.get(fieldName);
+			if (null == value) {
+				throw new MissingValueException();
+			}
+			return value;
 		}
 		
 		private void addField(String field) {

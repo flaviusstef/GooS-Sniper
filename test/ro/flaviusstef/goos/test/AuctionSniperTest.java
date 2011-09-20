@@ -7,12 +7,14 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.States;
 import org.jmock.integration.junit4.JMock;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ro.flaviusstef.goos.Auction;
 import ro.flaviusstef.goos.AuctionEventListener.PriceSource;
 import ro.flaviusstef.goos.AuctionSniper;
+import ro.flaviusstef.goos.Item;
 import ro.flaviusstef.goos.SniperListener;
 import ro.flaviusstef.goos.SniperSnapshot;
 import ro.flaviusstef.goos.SniperState;
@@ -20,13 +22,20 @@ import static ro.flaviusstef.goos.SniperState.*;
 
 @RunWith(JMock.class)
 public class AuctionSniperTest {
+	private static final int MAXIMUM_BID = 567;
 	private static final String ITEM_ID = "item id";
+	private final Item item = new Item(ITEM_ID, MAXIMUM_BID);
 	private final Mockery context = new Mockery();
 	private final SniperListener sniperListener = 
 		context.mock(SniperListener.class);
 	private final States sniperState = context.states("sniper");
 	private final Auction auction = context.mock(Auction.class);
-	private final AuctionSniper sniper = new AuctionSniper(ITEM_ID, auction, sniperListener);
+	private final AuctionSniper sniper = new AuctionSniper(item, auction);
+	
+	@Before
+	public void before() {
+		sniper.addSniperListener(sniperListener);
+	} 
 	
 	@Test
 	public void reportsWhenAuctionClosesImmediately() {
@@ -53,10 +62,9 @@ public class AuctionSniperTest {
 	
 	@Test
 	public void reportsIsWinningWhenCurrentPriceComesFromSniper() {
+		allowingSniperBidding();
 		context.checking(new Expectations() {{
 			ignoring(auction);
-			allowing(sniperListener).sniperStateChanged(with(aSniperThatIs(BIDDING)));
-			then(sniperState.is("bidding"));
 			
 			atLeast(1).of(sniperListener).sniperStateChanged(
 					new SniperSnapshot(ITEM_ID, 20, 20, WINNING));
@@ -69,10 +77,9 @@ public class AuctionSniperTest {
 	
 	@Test
 	public void reportsLostIfAuctionClosesWhenBidding() {
+		allowingSniperBidding();
 		context.checking(new Expectations(){{
 			ignoring(auction);
-			allowing(sniperListener).sniperStateChanged(with(aSniperThatIs(BIDDING)));
-			then(sniperState.is("bidding"));
 			
 			atLeast(1).of(sniperListener).sniperStateChanged(with(aSniperThatHas(LOST)));
 			when(sniperState.is("bidding"));
@@ -95,6 +102,50 @@ public class AuctionSniperTest {
 		
 		sniper.currentPrice(100, 10, PriceSource.FromSniper);
 		sniper.auctionClosed();
+	}
+	
+	@Test
+	public void doesNotBidAndReportsLosingIfSubsequentPriceIsAboveStopPrice() {
+		allowingSniperBidding();
+		context.checking(new Expectations() {{
+			int bid = 123 + 45;
+			allowing(auction).bid(bid);
+			atLeast(1).of(sniperListener).sniperStateChanged(
+			  new SniperSnapshot(ITEM_ID, MAXIMUM_BID + 100, bid, LOSING));
+			when(sniperState.is("bidding"));
+		}});
+		
+		sniper.currentPrice(123, 45, PriceSource.FromOtherBidder);
+		sniper.currentPrice(MAXIMUM_BID + 100, 25, PriceSource.FromOtherBidder);
+	}
+	
+	@Test
+	public void doesNotBidAndReportsLosingIfFirstPriceIsAboveStopPrice() {
+		context.checking(new Expectations() {{
+			atLeast(1).of(sniperListener).sniperStateChanged(
+			  new SniperSnapshot(ITEM_ID, MAXIMUM_BID+100, 0, LOSING));
+		}});
+		sniper.currentPrice(MAXIMUM_BID + 100, 20, PriceSource.FromOtherBidder);
+	}
+
+	@Test
+	public void reportsLostIfAuctionClosesWhenLosing() {
+		context.checking(new Expectations() {{
+			allowing(sniperListener).sniperStateChanged(
+			  new SniperSnapshot(ITEM_ID, MAXIMUM_BID+100, 0, LOSING));
+			
+			atLeast(1).of(sniperListener).sniperStateChanged(
+			  new SniperSnapshot(ITEM_ID, MAXIMUM_BID + 100, 0, LOST));
+		}});
+		sniper.currentPrice(MAXIMUM_BID + 100, 20, PriceSource.FromOtherBidder);
+		sniper.auctionClosed();
+	}
+
+	private void allowingSniperBidding() {
+		context.checking(new Expectations(){{
+			allowing(sniperListener).sniperStateChanged(with(aSniperThatIs(BIDDING)));
+			then(sniperState.is("bidding"));
+		}});
 	}
 
 	// TODO: read about generics

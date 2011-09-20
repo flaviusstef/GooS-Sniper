@@ -73,6 +73,10 @@ public class FakeAuctionServer {
 		connection.disconnect();
 	}
 	
+	public void sendInvalidMessageContaining(String message) throws XMPPException {
+		currentChat.sendMessage(message);
+	}
+	
 	public void reportPrice(int price, int minimumIncrement, String currentWinner) throws XMPPException {
 		currentChat.sendMessage(
 		  String.format(
@@ -95,5 +99,6 @@ public class FakeAuctionServer {
 		messageListener.receivesAMessage(matcher);
 		assertThat(currentChat.getParticipant(), equalTo(sniperId));
 	}
+
 
 }
