@@ -14,7 +14,7 @@ import com.objogate.exception.Defect;
 
 @SuppressWarnings("serial")
 public class SnipersTableModel extends AbstractTableModel implements SniperListener, PortfolioListener {
-	private static final String[] STATUS_TEXT = {"joining", "bidding", "winning", "losing", "lost", "won"};
+	private static final String[] STATUS_TEXT = {"joining", "bidding", "winning", "losing", "lost", "won", "failed"};
 	private ArrayList<SniperSnapshot> snapshots = new ArrayList<SniperSnapshot>();
 	private ArrayList<AuctionSniper>notToBeGCd = new ArrayList<AuctionSniper>();
 	

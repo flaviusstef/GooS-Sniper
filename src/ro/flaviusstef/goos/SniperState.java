@@ -17,7 +17,8 @@ public enum SniperState {
 		@Override public SniperState whenAuctionClosed() { return LOST; }
 	},
 	LOST,
-	WON;
+	WON, 
+	FAILED;
 
 	// TODO: what is Defect
 	public SniperState whenAuctionClosed() {
