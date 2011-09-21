@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="vendor/windowlicker-swing-DEV.jar"/>
 	<classpathentry kind="lib" path="vendor/junit-4.8.1.jar"/>
 	<classpathentry kind="lib" path="vendor/hamcrest-1.3.0RC2.jar"/>
+	<classpathentry kind="lib" path="vendor/commons-io-2.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
